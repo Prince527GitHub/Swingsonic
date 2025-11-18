@@ -3,40 +3,21 @@ const router = express.Router();
 
 const proxy = require("../../packages/proxy");
 
-const { username, password } = global.config.server.api.jellyfin.user;
-
-function decodeId(id) {
-    try {
-        const decoded = JSON.parse(Buffer.from(decodeURIComponent(id), "base64").toString("utf-8"));
-
-        return { id: decoded?.album ?? decoded?.id ?? id };;
-    } catch (error) {
-        return { id };
-    }
-}
-
 router.get("/:id/images/primary", async(req, res) => {
     const id = req.params.id;
 
-    const decoded = decodeId(id);
+    const decoded = JSON.parse(Buffer.from(decodeURIComponent(id), "base64").toString("utf-8"));
 
     // const artist = await fetch(`${global.config.music}/artist/${id}/albums?limit=1&all=false`);
 
-    const auth = await fetch(`${global.config.music}/auth/login`, {
-        method: "POST",
-        body: JSON.stringify({
-            username,
-            password
-        }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    if (!auth.ok) return res.sendStatus(401);
+    const data = {
+        type: decoded?.album ? "thumbnail" : "artist",
+        id: decoded?.album || decoded?.id
+    };
 
-    req.user = auth.headers.get("set-cookie");
+    req.user = decoded.auth;
 
-    proxy(res, req, `${global.config.music}/img/thumbnail/medium/${decoded.id}.webp`);
+    proxy(res, req, `${global.config.music}/img/${data.type}/medium/${data.id}.webp`);
 });
 
 router.use("/:id/file", getFile);
@@ -47,19 +28,7 @@ async function getFile(req, res) {
 
     const decoded = JSON.parse(Buffer.from(decodeURIComponent(id), "base64").toString("utf-8"));
 
-    const auth = await fetch(`${global.config.music}/auth/login`, {
-        method: "POST",
-        body: JSON.stringify({
-            username,
-            password
-        }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    });
-    if (!auth.ok) return res.sendStatus(401);
-
-    req.user = auth.headers.get("set-cookie");
+    req.user = decoded.auth;
 
     proxy(res, req, `${global.config.music}/file/${decoded.id}/legacy?filepath=${encodeURIComponent(decoded.path)}&container=mp3&quality=original`);
 }
