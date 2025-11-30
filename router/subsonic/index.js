@@ -74,7 +74,7 @@ async function checkAuth(req, res, next) {
 module.exports = async(app) => {
     app.use("/rest/*", checkAuth);
 
-    const routeFiles = await getFileList(`${process.cwd()}/router/subsonic`, { type: ".js", recursively: false });
+    const routeFiles = await getFileList(__dirname, { type: ".js", recursively: false });
 
     routeFiles.map((value) => {
         if (!value.includes("index.js")) {

@@ -1,7 +1,18 @@
 module.exports = async(req, res, proxy, xml) => {
     const id = req.query.id;
 
-    const decode = JSON.parse(Buffer.from(id, "base64").toString("utf-8"));
+    let imageId, imageType;
 
-    proxy(res, req, `${global.config.music}/img/${decode.type === "artist" ? "artist" : "thumbnail"}/medium/${decode.id}`);
+    if (id.startsWith("al-")) {
+        imageId = id.substring(3);
+        imageType = "album";
+    } else {
+        const decode = JSON.parse(Buffer.from(id, "base64").toString("utf-8"));
+        imageId = decode.id;
+        imageType = decode.type;
+    }
+
+    console.log(imageId, imageType)
+
+    proxy(res, req, `${global.config.music}/img/${imageType === "artist" ? "artist" : "thumbnail"}/medium/${imageId}`);
 }

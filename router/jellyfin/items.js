@@ -3,7 +3,7 @@ const router = express.Router();
 
 const proxy = require("../../packages/proxy");
 
-const { username, password } = global.config.server.api.jellyfin.user;
+const { username, password } = global.config.server.users[0];
 
 function decodeId(id) {
     try {

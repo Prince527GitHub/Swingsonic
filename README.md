@@ -43,10 +43,8 @@ services:
       - SERVER_API_SUBSONIC_ENABLE=true # Enable of disable Subsonic API implementation
       - SERVER_API_SUBSONIC_OPTIONS_ZW=true # Enable of Zero Width Character Hack
       - SERVER_API_JELLYFIN_ENABLE=true # Enable of disable Jellyfin API implementation
-      - SERVER_API_JELLYFIN_USER_USERNAME=admin # Jellyfin implementation requires a Swing Music user's username
-      - SERVER_API_JELLYFIN_USER_PASSWORD=admin # Jellyfin implementation requires a Swing Music user's password
       - SERVER_API_EUTERPE=true # Enable of disable Enterpe API implementation
-      - SERVER_USERS_0_USERNAME=admin # Subsonic implementation requires a list of Swing Music users's usernames
-      - SERVER_USERS_0_PASSWORD=admin # Subsonic implementation requires a list of Swing Music users's passwords
+      - SERVER_USERS_0_USERNAME=admin # Subsonic & Jellyfin implementation requires a list of Swing Music users's usernames
+      - SERVER_USERS_0_PASSWORD=admin # Subsonic & Jellyfin implementation requires a list of Swing Music users's passwords
       - MUSIC=http://ip:port # The URL of your Swing Music server
 ```

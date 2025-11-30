@@ -31,7 +31,7 @@ async function checkAuth(req, res, next) {
 }
 
 module.exports = async(app) => {
-    const routeFiles = await getFileList(`${process.cwd()}/router/jellyfin`, { type: ".js", recursively: false });
+    const routeFiles = await getFileList(__dirname, { type: ".js", recursively: false });
 
     routeFiles.map((value) => {
         if (!value.includes("index.js")) {
